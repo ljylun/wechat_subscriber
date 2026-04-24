@@ -1,0 +1,68 @@
+# 微信公众号文章自动订阅系统
+# WeChat Public Account Article Subscriber - Docker Compose
+
+version: '3.8'
+
+services:
+  # 主应用服务
+  subscriber:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: wechat_subscriber
+    restart: unless-stopped
+    environment:
+      - TZ=Asia/Shanghai
+    volumes:
+      # 配置目录
+      - ./config:/etc/wechat_subscriber:ro
+      # 数据目录
+      - subscriber_data:/data
+      # 日志目录
+      - ./logs:/var/log/wechat_subscriber
+      # PID文件目录
+      - /var/run:/var/run
+    ports:
+      - "8080:8080"
+    depends_on:
+      - redis
+    networks:
+      - subscriber_network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+    command: >
+      --config /etc/wechat_subscriber/config.yaml
+      start --daemon
+
+  # Redis缓存服务（用于去重和会话管理）
+  redis:
+    image: redis:7-alpine
+    container_name: wechat_subscriber_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    networks:
+      - subscriber_network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+networks:
+  subscriber_network:
+    driver: bridge
+
+volumes:
+  # 数据卷
+  subscriber_data:
+    driver: local
+  redis_data:
+    driver: local

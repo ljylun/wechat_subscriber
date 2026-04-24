@@ -1,0 +1,83 @@
+# 微信公众号文章自动订阅系统配置文件示例
+# WeChat Public Account Subscriber Configuration Example
+
+# ===========================================
+# 公众号配置
+# ===========================================
+accounts:
+  # 示例公众号配置
+  - biz: "your_biz_id_here"        # 公众号唯一标识
+    name: "示例公众号"               # 公众号名称（可省略）
+    alias: ""                      # 公众号别名（可省略）
+  # 添加更多公众号...
+  # - biz: "another_biz_id"
+  #   name: "另一个公众号"
+
+# ===========================================
+# 监控配置
+# ===========================================
+poll_interval: 300          # 轮询间隔（秒），默认300秒（5分钟）
+batch_size: 10              # 每次处理的文章数量
+
+# ===========================================
+# 反爬配置
+# ===========================================
+anti_crawl:
+  user_agents:
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    - "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:121.0) Gecko/20100101 Firefox/121.0"
+    - "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.2 Safari/605.1.15"
+  min_delay: 2.0            # 最小请求延迟（秒）
+  max_delay: 5.0            # 最大请求延迟（秒）
+
+# ===========================================
+# 重试配置
+# ===========================================
+retry:
+  max_retries: 3            # 最大重试次数
+  base_delay: 60             # 基础重试延迟（秒）
+  max_delay: 1800            # 最大重试延迟（秒），30分钟
+
+# ===========================================
+# 存储配置
+# ===========================================
+data_root: "/data"          # 数据存储根目录
+db_path: "/data/dedup.db"   # SQLite数据库路径
+enable_dedup: true          # 启用去重
+
+# ===========================================
+# 日志配置
+# ===========================================
+log_file: "/var/log/wechat_subscriber.log"
+log_level: "INFO"           # DEBUG, INFO, WARNING, ERROR, CRITICAL
+log_retention_days: 30      # 日志保留天数
+
+# ===========================================
+# 代理配置（可选）
+# ===========================================
+proxy:
+  enabled: false            # 是否启用代理
+  api_url: "http://your-proxy-api.com/get_proxy"  # 代理API地址
+  min_delay: 1.0             # 获取代理最小延迟
+  max_delay: 3.0             # 获取代理最大延迟
+
+# ===========================================
+# 通知配置
+# ===========================================
+notification:
+  enabled: true
+  webhook_url: "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=YOUR_KEY_HERE"
+
+# ===========================================
+# 邮件通知配置（可选）
+# ===========================================
+# email:
+#   enabled: false
+#   smtp_server: "smtp.gmail.com"
+#   smtp_port: 587
+#   username: "your-email@gmail.com"
+#   password: "your-app-password"
+#   from_addr: "your-email@gmail.com"
+#   to_addrs:
+#     - "recipient@example.com"

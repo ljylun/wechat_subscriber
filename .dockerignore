@@ -1,0 +1,49 @@
+# Docker ignore file
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+# 测试文件
+tests/
+test_*.py
+*.test.py
+.coverage
+htmlcov/
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 文档
+docs/
+*.md
+!requirements.txt
+
+# Git
+.git/
+.gitignore
+
+# 本地配置
+config.yaml
+.env
+.env.local
+
+# 数据文件
+data/
+*.db
+*.sqlite
+
+# 本地日志
+logs/
